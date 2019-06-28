@@ -1,33 +1,49 @@
 .App {
+  height: 80vh;
   text-align: center;
+  font-family: 'Press Start 2P', cursive;
+  color: rgb(59, 159, 192);
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(to right, blue, rgb(51, 50, 50));
+  line-height: 1.5;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.quiz-title {
+  font-size: 100px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.quiz-description {
+  font-size: 50px;
+}
+
+
+.question {
+  margin-bottom: 20px;
+  font-size: 25px;
+}
+
+#p-n-buttons {
+  margin-top: 20px;
+}
+
+.previous-button {
+  margin-right: 15px;
+}
+
+.next-button {
+  margin-left: 15px;
+}
+
+.answers {
+  font-size: 20px;
+}
+
+#answer-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
