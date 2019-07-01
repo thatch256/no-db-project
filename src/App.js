@@ -5,6 +5,8 @@ import Question from './components/Question'
 import Results from './components/Results'
 import Form from './components/Form'
 import axios from 'axios'
+import mega from './ezgif.com-reverse.gif'
+import megaTwo from './ezgif.com-unreverse.gif'
 
 class App extends Component {
   constructor() {
@@ -15,7 +17,11 @@ class App extends Component {
       view: "Questions",
       currentResultsArray: [],
       currentQuestion: {},
-      i: 0
+      i: 0,
+      question: {
+        question: "",
+        answers: []
+      }
     }
 
     this.handleNext = this.handleNext.bind(this);
@@ -24,13 +30,12 @@ class App extends Component {
     this.handleView = this.handleView.bind(this)
     this.handleSetResults = this.handleSetResults.bind(this)
     this.deleteQuestion = this.deleteQuestion.bind(this)
+    this.updateEdit = this.updateEdit.bind(this)
   }
   
   componentDidMount() {
-    console.log('hit component did mount'  )
     axios.get('/api/quiz')
     .then(res => { 
-      console.log('got a response:', res.data)
       this.setState({questions: res.data, currentQuestion: res.data[0]})
     })
     .catch(err => {
@@ -39,9 +44,7 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('hit comp update')
     if(prevState.questions !== this.state.questions) {
-      console.log('hit if condition')
       this.render()
     }
   }
@@ -66,11 +69,10 @@ class App extends Component {
   }
 
   addQuestion = (question) => {
-    console.log(question)
     axios.post('/api/quiz', question)
     .then(res => {
       this.setState({
-        questions: res.data})
+        questions: res.data, currentQuestion: res.data[0]})
       })
         .catch(err => {
       console.log(`Can't add question`, err);
@@ -87,7 +89,6 @@ class App extends Component {
 
   
   handleNext() {
-    console.log('hit next', this.state.i)
     let iCopy = this.state.i;
     if (iCopy < this.state.questions.length - 1) {
       this.setState({ i: iCopy + 1, currentQuestion: this.state.questions[iCopy + 1] });
@@ -97,7 +98,6 @@ class App extends Component {
   }
 
   handlePrevious() {
-    console.log('hit previous', this.state.i)
     let iCopy = this.state.i;
     if (iCopy > 0) {
       this.setState({ i: iCopy - 1, currentQuestion: this.state.questions[iCopy - 1] });
@@ -106,23 +106,65 @@ class App extends Component {
     }
   }
 
+  editQuestion = (updatedQuestion, id) => { 
+    console.log(updatedQuestion, id);
+    axios.put(`/api/quiz/${id}`, updatedQuestion)
+    .then(res => {
+      this.setState({questions: res.data, currentQuestion: res.data[0]})
+    })
+    .catch(err => {
+      console.log('Error editing question', err);
+    })
+  }
+
+  updateEdit(e) {
+    let { name, value, id } = e.target;
+    if (name === "question") {
+      this.setState({
+        currentQuestion: {
+          question: value,
+          answers: [...this.state.currentQuestion.answers],
+          id
+        }
+      })
+      console.log(this.state.currentQuestion)
+    } else {
+        let copiedArray = [...this.state.currentQuestion.answers]
+        copiedArray[+id] = value
+        this.setState({
+            currentQuestion: {
+              question: this.state.currentQuestion.question,
+              answers: copiedArray,
+              id
+            }
+        })
+        console.log(this.state.currentQuestion.answers)
+    }
+  }
 
   render() {
-    console.log(this.state.questions)
     return (
       <div className="App">
-        {this.state.view === "Questions" ?   <div><header className="quiz-title">Best Quiz</header>
-        <section>
-          <img></img>
-          <img></img>
-          <img></img>
-        </section>
-        <p className="quiz-description">Take This Quiz If You Want To Live</p>
-        <input placeholder="Enter Name" name="userName" onChange={this.handleInput}/>
+        {this.state.view === "Questions" ?   <div>
+        <div id="header-div">
+        <img src={megaTwo}/>
+        <header className="quiz-title">Mega Quiz Creator</header>
+        <img src={mega}/>
+        </div>
+        <p className="quiz-description">Make The Best Quiz</p>
+        <input id="name-input" placeholder="Enter Name" name="userName" onChange={this.handleInput} />
         {this.state.questions.length ? (
-            <Question currentQuestion={this.state.currentQuestion} handleNext={this.handleNext} handlePrevious={this.handlePrevious} name={this.state.name} handleView={this.handleView} deleteQuestion={this.deleteQuestion} />
-        ) : (<div>Take it easy there {this.state.name}, there are no more questions!</div>)}
-        <Form addQuestion={this.addQuestion} /> </div>: <div> <Results handleView={this.handleView} name={this.state.name}/> </div>}
+            <Question 
+              currentQuestion={this.state.currentQuestion} 
+              handleNext={this.handleNext} handlePrevious={this.handlePrevious} 
+              name={this.state.name} 
+              handleView={this.handleView} 
+              deleteQuestion={this.deleteQuestion}  
+              editQuestion={this.editQuestion}
+              updateEdit={this.updateEdit} 
+              updatedQuestion={this.state.currentQuestion}/>
+        ) : (<div>Take it easy {this.state.name}, there are no more questions!</div>)}
+        <Form name={this.state.name} addQuestion={this.addQuestion} /> </div>: <div> <Results handleView={this.handleView} name={this.state.name} /> </div>}
       
       </div>
     );

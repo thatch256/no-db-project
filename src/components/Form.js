@@ -1,8 +1,8 @@
 import React from "react";
 
 class Form extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       question: {
@@ -36,24 +36,22 @@ class Form extends React.Component {
   }
 
   render() {
-    console.log(this.state.question);
     return (
-      <div>
-        <input
-          name="question"
-          placeholder="Enter Question"
-          onChange={this.handleChange}
-        />
-        <input name="answer" placeholder="Enter Answer #1" id="0" onChange={this.handleChange} />
-        <input name="answer" placeholder="Enter Answer #2" id="1" onChange={this.handleChange} />
-        <input name="answer" placeholder="Enter Answer #3" id="2" onChange={this.handleChange} />
-        <input name="answer" placeholder="Enter Answer #4" id="3" onChange={this.handleChange} />
-        <button onClick={() => this.props.addQuestion(this.state.question)}>
-          Add New Question
-        </button>
-      </div>
-    );
-  }
+            <div className="form-container" ><input
+            name="question"
+            placeholder="Enter Question"
+            onChange={this.handleChange}
+          />
+          <input name="answer" placeholder="Enter Answer #1" id="0" onChange={this.handleChange} />
+          <input name="answer" placeholder="Enter Answer #2" id="1" onChange={this.handleChange} />
+          <input name="answer" placeholder="Enter Answer #3" id="2" onChange={this.handleChange} />
+          <input name="answer" placeholder="Enter Answer #4" id="3" onChange={this.handleChange} />
+          <button onClick={() => this.props.addQuestion(this.state.question)}>
+            Add New Question
+          </button>
+          </div>
+        )
+    }
 }
 
 export default Form;

@@ -4,23 +4,58 @@ export default class Question extends Component {
   constructor(props) {
     super(props);
 
-
-
+    this.state = {
+      editing: false,
+      question: {
+        question: {},
+        answers: []
+      }
+    }
     this.handleDelete = this.handleDelete.bind(this);
   }
 
+  flipEdit = () => {
+    this.setState({
+        editing: !this.state.editing
+    })
+  }
 
+  saveChanges = () => {
+    console.log(this.props)
+    console.log(this.props.updatedQuestion,this.props.currentQuestion.id);
+    this.flipEdit()
+    this.props.editQuestion(this.props.updatedQuestion, this.props.currentQuestion.id)
+  }
 
   handleDelete(id) {
     this.props.deleteQuestion(id);
   }
 
   render() {
-    console.log(this.props.currentQuestion);
-   
-    let { currentQuestion } = this.props;
+    let { currentQuestion } = this.props; 
+    let {editing} = this.state
      return (
         <div>
+          {editing ? (
+        <div>
+          <div id="edit-fields-container">
+          <input
+             defaultValue={currentQuestion.question}
+             name="question"
+             placeholder="Enter Question"
+             onChange={this.props.updateEdit}
+           />
+           <input defaultValue={currentQuestion.answers[0]} name="answer" placeholder="Enter Answer #1" id="0" onChange={this.props.updateEdit} />
+           <input defaultValue={currentQuestion.answers[1]} name="answer" placeholder="Enter Answer #2" id="1" onChange={this.props.updateEdit} />
+           <input defaultValue={currentQuestion.answers[2]} name="answer" placeholder="Enter Answer #3" id="2" onChange={this.props.updateEdit} />
+           <input defaultValue={currentQuestion.answers[3]} name="answer" placeholder="Enter Answer #4" id="3" onChange={this.props.updateEdit} />
+           </div>
+           <button onClick={this.saveChanges}>
+             Save Changes
+           </button>
+           </div>
+          ) : (
+            <div>
           <div className="question">{currentQuestion.question}</div>
           <section id="answer-buttons">
             <label>
@@ -75,6 +110,7 @@ export default class Question extends Component {
             onClick={this.props.handleNext}
           >{` Next Question >`}</button>
           <button
+            id="results-button"
             onClick={() => {
               this.props.handleView("Results");
             }}
@@ -82,10 +118,16 @@ export default class Question extends Component {
             Submit Answers
           </button>
           <button
-            onClick={() => this.handleDelete(currentQuestion.id)}
+            onClick={() => this.handleDelete(currentQuestion.id)} 
           >
             Delete Question
           </button>
+          <button id="edit-button" onClick={this.flipEdit}
+          >
+            Edit Current Question
+          </button>
+          </div>
+          )}
         </div>
       );
     } 

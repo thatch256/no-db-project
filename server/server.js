@@ -10,7 +10,7 @@ app.use(express.json())
 
 app.get('/api/quiz', ctrl.getQuestions)
 // app.get(`api/quiz/:id`)
-app.put('/api/quiz/:answer', )
+app.put('/api/quiz/:id', ctrl.updateQuestion)
 app.post('/api/quiz', ctrl.addQuestion)
 app.delete('/api/quiz/:id', ctrl.deleteQuestion)
 
